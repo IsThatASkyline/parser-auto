@@ -32,7 +32,10 @@ def get_pages(url):
     pages_count = int(soup.find('ul', class_='sc-pagination').find_all('li')[-2].text)
     pages = []
     for page in range(1, pages_count + 1):
-        r = requests.get(url + f'?currentpage={page}', headers=headers).text
+        if '?' not in url:
+            r = requests.get(url + f'?currentpage={page}', headers=headers).text
+        else:
+            r = requests.get(url + f'&currentpage={page}', headers=headers).text
         soup = BeautifulSoup(r, 'lxml')
         href = HOST + soup.find('div', class_='listItem').find('div', class_='ls-titles').find('a').get('href')
         pages.append(href)

@@ -7,7 +7,6 @@ import os, requests, json, shutil
 HOST = 'https://www.truckscout24.de'
 
 url = 'https://www.truckscout24.de/transporter/gebraucht/kuehl-iso-frischdienst/renault'
-
 headers = {
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
@@ -78,11 +77,11 @@ def get_data(pages):
         except:
             title = ""
         try:
-            price = soup.find('div', class_='d-price').find('h2').text.rstrip(',-')
+            price = int(soup.find('div', class_='d-price').find('h2').text.rstrip(',-').replace('.', '').split()[1])
         except:
             price = ''
         try:
-            mileage = soup.find('div', class_='data-basic1').find_all('div', class_='itemspace')[1].find('div', class_='itemval').text
+            mileage = int(soup.find('div', class_='data-basic1').find_all('div', class_='itemspace')[1].find('div', class_='itemval').text.replace('.', '').split()[0])
         except:
             mileage = 0
         try:
@@ -90,7 +89,7 @@ def get_data(pages):
         except:
             color = ''
         try:
-            power = soup.find('div', text='Leistung').parent.text.split('Leistung')[1].split('(')[0].strip()
+            power = int(soup.find('div', text='Leistung').parent.text.split('Leistung')[1].split('(')[0].strip().split()[0])
         except:
             power = ''
         if long_desc:

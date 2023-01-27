@@ -63,7 +63,9 @@ def get_data(pages):
             more = driver.find_element(By.XPATH, '//*[@id="content-container-root"]/div[2]/div[5]/div/div[1]/a[1]')
             actions.move_to_element(more).click(more)
             actions.perform()
+            long_desc = True
         except Exception as ex:
+            long_desc = False
             # print(ex)
             pass
         source_page = driver.page_source
@@ -88,11 +90,16 @@ def get_data(pages):
             power = soup.find('div', text='Leistung').parent.text.split('Leistung')[1].split('(')[0].strip()
         except:
             power = ''
-        try:
-            desc = soup.find_all('div', class_='sec-wrap')[-1].find('div', class_='short-description').text
-        except:
-            desc = ''
-
+        if long_desc:
+            try:
+                desc = soup.find_all('div', class_='sec-wrap')[-1].find('div', class_='short-description').text
+            except:
+                desc = ''
+        else:
+            try:
+                desc = soup.find_all('div', class_='sec-wrap')[-1].find('div', class_='sc-expandable-box__content').text
+            except:
+                desc = ''
         try:
             for i, obj in enumerate(soup.find('div', class_='as24-pictures__container').find_all('div', class_='as24-carousel__item')[0:3]):
                 img = obj.find('img').get('data-src')
@@ -127,3 +134,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
